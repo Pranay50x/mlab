@@ -4,7 +4,7 @@
 
 int data[100]; 
 int fidx = -1; 
-pthread_mutex_t lock; 
+pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER; 
 
 void *search(void *arg){
     long id = (long)arg; 
@@ -20,7 +20,7 @@ void *search(void *arg){
 }
 
 int main(){
-    pthread_mutex_init(&lock, NULL);
+    // pthread_mutex_init(&lock, NULL);
 
     for(int i=0; i<100; i++){
         data[i] = i+1; 
