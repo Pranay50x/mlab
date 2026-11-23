@@ -1,33 +1,37 @@
-#include <omp.h>
 #include <stdio.h>
+#include <omp.h> 
 #include <stdlib.h>
 
+#define n 1000000
 int main(){
-    int arr[1000000]; 
-    long long sum = 0; 
+    int arr[n]; 
+    int psum=0, ssum=0; 
 
-    for(int i=0; i<1000000; i++){
-        arr[i] = rand() % 1000000; 
+    for(int i=0; i<n; i++){
+        arr[i] = rand() % 100;
     }
 
-    double t1 = omp_get_wtime(); 
+    double s1 = omp_get_wtime(); 
 
-    for(int i=0; i<1000000; i++){
-        sum += arr[i];
+    for(int i=0; i<n; i++){
+        ssum += arr[i]; 
     }
-    double t2 = omp_get_wtime(); 
-    printf("Final sum serial: %lld\n", sum); 
-    printf("Time taken serial: %fs\n", t2-t1);
 
-    long long s = 0; 
+    double s2 = omp_get_wtime(); 
+    printf("Serial sum: %d\n", ssum); 
+    printf("Time taken for serial: %fs\n", s2-s1); 
+
     double p1 = omp_get_wtime(); 
 
-    #pragma omp parallel for reduction(+:s) 
-    for(int i=0; i<1000000; i++){
-        s += arr[i];
+    #pragma omp parallel for reduction(+:psum)
+    for(int i=0; i<n; i++){
+        psum += arr[i];
     }
-    double p2 = omp_get_wtime();
 
-    printf("Final sum with Parallel: %lld\n",s); 
-    printf("Time taken parallel: %fs\n", p2-p1);
+    double p2 = omp_get_wtime(); 
+
+    printf("Parallel sum: %d\n", psum); 
+    printf("Time taken for parallel: %fs\n", p2-p1);
+    return 0;
+
 }
